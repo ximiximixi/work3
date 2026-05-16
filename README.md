@@ -6,23 +6,23 @@ GitHub: https://github.com/ximiximixi/work3
 
 ## Demo Videos
 
-The README embeds the two final demonstration videos prepared on May 16.
+The README shows animated previews of the two final demonstration videos prepared on May 16, with MP4 links kept for full playback.
 
 ### Demo 1
 
 Source video: `5月16日.mp4`
 
-<video src="docs/media/may16_demo_01.mp4" controls muted width="720"></video>
+![Demo 1](docs/media/may16_demo_01.gif)
 
-[Open demo 1](docs/media/may16_demo_01.mp4)
+[Open MP4 demo 1](docs/media/may16_demo_01.mp4)
 
 ### Demo 2
 
 Source video: `5月16日(1).mp4`
 
-<video src="docs/media/may16_demo_02.mp4" controls muted width="720"></video>
+![Demo 2](docs/media/may16_demo_02.gif)
 
-[Open demo 2](docs/media/may16_demo_02.mp4)
+[Open MP4 demo 2](docs/media/may16_demo_02.mp4)
 
 ## Main Pipelines
 
