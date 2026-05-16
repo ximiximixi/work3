@@ -1,0 +1,11 @@
+opencv-python
+numpy
+PyYAML
+Pillow
+matplotlib
+scikit-learn
+reportlab
+
+# Optional, required only for --method anomaly_dino:
+# torch
+# torchvision

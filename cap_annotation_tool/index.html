@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>端盖缺陷小样本标注</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>端盖缺陷标注</h1>
+        <p id="datasetMeta">loading...</p>
+      </div>
+      <div class="filters">
+        <button class="seg active" data-filter="all">全部</button>
+        <button class="seg" data-filter="normal_or_early_review">前段</button>
+        <button class="seg" data-filter="mid_video_suspect_review">中段</button>
+        <button class="seg" data-filter="late_rare_abnormal_review">后段稀缺</button>
+      </div>
+      <div id="frameList" class="frame-list"></div>
+    </aside>
+
+    <main class="workspace">
+      <header class="toolbar">
+        <div>
+          <div id="frameTitle" class="frame-title">Frame</div>
+          <div id="frameSub" class="frame-sub">-</div>
+        </div>
+        <div class="toolbar-actions">
+          <button id="prevBtn" title="上一帧 A">上一帧</button>
+          <button id="nextBtn" title="下一帧 D">下一帧</button>
+          <button id="copyPrevBtn" title="复制上一帧标注">复制上一帧</button>
+          <button id="saveBtn" class="primary" title="保存到 annotations.json">保存</button>
+          <button id="exportJsonBtn" title="下载 JSON">导出 JSON</button>
+          <button id="exportCsvBtn" title="下载 CSV">导出 CSV</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="canvas-wrap">
+          <canvas id="canvas"></canvas>
+          <div class="hint">拖拽画框，点击框选中；Delete 删除；A/D 切帧；1/2/3 标帧 NORMAL/DEFECT/UNKNOWN。</div>
+        </div>
+
+        <aside class="panel">
+          <section class="card">
+            <h2>帧标签</h2>
+            <div class="state-row">
+              <button class="state-btn normal" data-state="NORMAL">NORMAL</button>
+              <button class="state-btn defect" data-state="DEFECT">DEFECT</button>
+              <button class="state-btn unknown" data-state="UNKNOWN">UNKNOWN</button>
+            </div>
+            <label class="field">
+              <span>当前帧</span>
+              <select id="frameState">
+                <option>UNLABELED</option>
+                <option>NORMAL</option>
+                <option>DEFECT</option>
+                <option>UNKNOWN</option>
+              </select>
+            </label>
+            <div class="checks">
+              <label><input type="checkbox" value="top" /> top 缺失</label>
+              <label><input type="checkbox" value="bottom" /> bottom 缺失</label>
+              <label><input type="checkbox" value="side_upper" /> side_upper 缺失</label>
+              <label><input type="checkbox" value="side_lower" /> side_lower 缺失</label>
+            </div>
+            <label class="field">
+              <span>备注</span>
+              <textarea id="notes" rows="3" placeholder="遮挡、方向、接口不可见等"></textarea>
+            </label>
+          </section>
+
+          <section class="card">
+            <h2>画框工具</h2>
+            <label class="field">
+              <span>新框类型</span>
+              <select id="boxType">
+                <option value="sample">sample 样本</option>
+                <option value="fixed_region">fixed_region 固定检测区</option>
+                <option value="top">top 端口</option>
+                <option value="bottom">bottom 端口</option>
+                <option value="side_upper">side_upper 侧口</option>
+                <option value="side_lower">side_lower 侧口</option>
+                <option value="ignore">ignore 忽略区</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>选中框状态</span>
+              <select id="boxState">
+                <option>UNLABELED</option>
+                <option>PRESENT</option>
+                <option>MISSING</option>
+                <option>UNKNOWN</option>
+                <option>IGNORE</option>
+              </select>
+            </label>
+            <div class="button-grid">
+              <button id="addFixedRegionBtn">添加右半固定区</button>
+              <button id="useAutoBtn">用 AI 框作草稿</button>
+              <button id="deleteBoxBtn">删除选中框</button>
+              <button id="clearFrameBtn">清空本帧</button>
+            </div>
+            <div id="selectedInfo" class="selected-info">未选中框</div>
+          </section>
+
+          <section class="card">
+            <h2>AI 参考</h2>
+            <div id="autoPredictions" class="predictions"></div>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

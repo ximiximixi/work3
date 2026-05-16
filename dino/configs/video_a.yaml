@@ -1,0 +1,49 @@
+video_id: video_a
+video_path: "20241031_222226.mp4"
+output_dir: "outputs/video_a"
+
+# Current video metadata from inspection:
+# 1920x1080, 29.851 fps, 14108 frames, 472.61 s.
+train_range_sec: [0, 180]
+val_normal_range_sec: [180, 240]
+test_range_sec: [240, 472.61]
+
+# Manual ROI covering the main conveyor objects visible in the sampled frames.
+# Tune this if a later visual check shows the cap is clipped.
+roi_xyxy: [350, 240, 1510, 820]
+
+# Sample about one frame per second by default.
+frame_step: 30
+
+static_filter:
+  enabled: true
+  resized_width: 320
+  motion_threshold: 8.0
+  min_sharpness: 1800.0
+
+threshold_policy:
+  percentile: 99.5
+  std_factor: 3.0
+  min_threshold: 0.08
+
+baseline:
+  hsv_lower: [12, 35, 60]
+  hsv_upper: [48, 255, 255]
+  min_area_px: 25
+
+anomaly_dino:
+  weight_path: "dinov2_vits14_pretrain.pth"
+  model_name: "dinov2_vits14"
+  input_size: 448
+  patch_size: 14
+  device: "auto"
+  augment_rotations: false
+  mask_patches: false
+  top_percent: 1.0
+  max_memory_patches: 80000
+  nn_chunk_size: 8192
+
+render:
+  demo_start_sec: 330
+  demo_duration_sec: 15
+  fps: 15
