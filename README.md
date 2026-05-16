@@ -35,15 +35,15 @@ Source video: `5月16日(1).mp4`
   - Provides blue-cap anchor localization reused by the final micro-ROI detector.
 
 - `prepare_cap_annotation_set.py`
-  - Extracts right-half frames for manual annotation.
+  - Extracts right-half frames for ROI calibration.
 
 - `cap_annotation_tool/`
-  - Lightweight browser annotation tool.
+  - Lightweight browser ROI calibration tool.
   - Saves coordinates in original video coordinates by adding `offset_x=960`.
 
 - `side_micro_roi_detector.py`
   - Final fixed side micro-ROI detector.
-  - Trains an ExtraTrees `PRESENT/MISSING/BACKGROUND` patch classifier from manual annotations.
+  - Trains an ExtraTrees `PRESENT/MISSING/BACKGROUND` patch classifier from ROI calibration samples.
   - Uses fixed upper/lower horizontal bands, blue-cap constrained candidates, beige sleeve evidence rules, and event aggregation.
 
 - `make_side_micro_showcase_video.py`
@@ -98,11 +98,11 @@ It covers:
 
 - the complete `20241031_222226.mp4` coarse-ROI / PatchCore-style experiment;
 - the failed automatic large-ROI attempts;
-- manual side micro-ROI annotation;
+- side micro-ROI calibration;
 - final fixed upper/lower band micro-ROI classification;
 - event statistics and visualization videos;
 - limitations, missing ground truth, and future improvements.
 
 ## Notes on Accuracy
 
-The current project outputs detection statistics and internal holdout metrics, but it does not yet include full frame-level or event-level human ground truth for both videos. Strict per-video accuracy and multi-video mean accuracy should therefore be computed only after adding manual labels.
+The current project outputs detection statistics and internal holdout metrics, but it does not yet include full frame-level or event-level ground truth for both videos. Strict per-video accuracy and multi-video mean accuracy should therefore be computed only after adding ground-truth labels.
