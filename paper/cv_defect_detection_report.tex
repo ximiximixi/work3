@@ -226,7 +226,7 @@
     \item 低帧率检查视频和最后一分钟高级 showcase 视频；
     \item 当前仍缺少独立测试集和事件级真值所带来的解释边界。
 \end{enumerate}
-
+\newpage
 \section{任务定义}
 \subsection{输入与输出}
 项目输入为工业检测视频 \code{20241101\_161258.mp4} 及其采样帧。根据 ROI 校准任务文件，该视频帧分辨率为 $1920\times1080$，校准工具仅展示右半边裁剪区域，即原始坐标 $x\geq960$ 的区域。最终检测器进一步将关注范围缩小到两个固定水平带：上侧侧边接口检测带 $y=350$--$495$，下侧侧边接口检测带 $y=835$--$960$。候选 patch 的默认尺寸为 $84\times68$，主要围绕蓝色端盖或结构锚点附近生成。
@@ -277,11 +277,10 @@
 \end{tabularx}
 \end{table}
 
-\subsection{LaTeX 模板判断}
-\path{paper/} 文件夹中仅有 \path{hpc_ch2.tex}。该文件是一个完整的中文课程实验报告模板，使用 \code{article} 文档类、\code{xeCJK} 中文支持、\code{Times New Roman} 英文字体、\code{Microsoft YaHei/SimSun} 中文字体回退、\code{fancyhdr} 页眉页脚、\code{titlesec} 蓝色章节样式、\code{booktabs} 表格、\code{tabularx/longtable} 长表格、\code{figure[H]} 固定图位置和 \code{thebibliography} 参考文献写法。模板原始内容是另一个“工业激光环亮度均匀化与反推扫描重建”任务，不属于本项目，因此正文不能沿用，但排版、图表和参考文献风格适合本报告。
 
-本报告新建为 \path{paper/cv_defect_detection_report.tex}，沿用上述模板风格，并采用“摘要--引言--任务定义--数据与 ROI 校准--方法--实验设置--结果--可视化--误差分析--讨论--局限--结论--附录”的计算机视觉实验报告结构。
 
+
+\newpage
 \section{技术路线演化}
 \subsection{从粗 ROI 检测到微小 ROI 分类}
 图~\ref{fig:pipeline-evolution} 总结了本项目的技术路线。该路线并非一次成型，而是在多次失败、需求反馈和可视化检查中逐步收敛。
@@ -338,7 +337,7 @@ ROI 校准前端位于 \path{cap_annotation_tool/}，包括 \path{server.py}、\
 
 \subsection{第六阶段：视频可视化展示}
 最终输出不只包含 CSV/JSON，还生成了两个视频资产。第一个是 \path{side_micro_outputs/visuals/02_micro_review_2fps.mp4}，用于全视频低帧率检查；第二个是 \path{side_micro_outputs/visuals/03_last60s_8fps_showcase.mp4}，覆盖最后约 $60$s，使用 $8$ fps 渲染，并在左侧无用区域加入高级动态面板：实时风险仪表、\code{CLEAR/ALERT/WATCH} 状态、最大缺失分数曲线、上下通道风险条、证据 crop、热力图和最近 $20$s 风险条带。该视频是项目展示和复核的重要成果，但由于没有逐帧真值，它应被解释为定性展示，而非严格精度评估。
-
+\newpage
 \section{\code{20241031\_222226.mp4} 视频处理实验}
 \subsection{实验定位}
 \path{20241031_222226.mp4} 是本项目中最早形成完整输出闭环的视频实验。它并不是最终 side micro ROI 检测器的输入视频，但它完整体现了项目第一阶段的技术路线：先在较大的目标区域内定位圆形/端面目标，再用 PatchCore 风格的纹理记忆库和颜色/纹理惩罚项生成异常分数，最后通过事件过滤和回放视频进行视频检查。
@@ -463,7 +462,7 @@ Peak PatchCore score & 3.888 & 峰值时间 $397.0$s。 \\
 \path{defect_outputs/advanced_visuals/} 和 \path{defect_outputs/analysis/} 进一步给出了阈值分离、时间多指标、热力图 contact sheet、时空门线稳定性、无监督特征漂移、事件取证板和累计证据监控等分析图。根据 \path{advanced_metrics.json}，accepted normal 的 $95$ 分位 hybrid score 为 $2.817$，event defect 的最小分数为 $4.134$，两者间隔为 $1.318$；样本 $t=382.5$s 的阈值 margin 为 $+0.418$。这些指标说明粗 ROI 实验在 \path{20241031_222226.mp4} 上形成了较清楚的事件分数分离。
 
 但这一结论仍然有边界：该视频实验检测的是较大的圆形/门控 ROI 的整体异常，而不是最终任务中的侧边接口米白色套/盖缺失。它能够说明“异常时段可以被粗 ROI 异常检测捕获”，却不能证明“side micro ROI 缺失检测已经准确”。因此，本报告将该视频作为完整的前期实验和失败/转向证据纳入正文，而把最终方法建立在 \path{20241101_161258.mp4} 的 side micro ROI 校准样本和固定上下检测带上。
-
+\newpage
 \section{数据与 ROI 校准}
 \subsection{原始视频与抽帧策略}
 最终 side micro ROI 检测使用的视频为 \path{20241101_161258.mp4}。根据 \path{cap_annotation_tool/tasks.json}，该视频帧率为 $29.953$ fps，原始帧大小为 $1920\times1080$。根据 showcase 输出摘要，视频结尾时间约为 $1091.209$s。ROI 校准工具抽取 $22$ 帧右半边裁剪图，裁剪图尺寸为 $960\times1080$，但保存的对象坐标会加回 \code{offset\_x=960}。
@@ -634,7 +633,7 @@ Showcase 视频 & 最后 $60$s，$1031.209$s--$1091.209$s，$8$ fps，$481$ 帧 
 \bottomrule
 \end{tabularx}
 \end{table}
-
+\newpage
 \section{结果}
 \subsection{检测输出统计}
 表~\ref{tab:detection-output-stats} 汇总最终全视频检测输出。全视频共 $2183$ 个采样时刻，每个时刻保留若干上/下通道候选，最终得到 $12{,}762$ 条观测。这里的 \code{MISSING} 是事件过滤后的持续缺失观测，\code{FILTERED\_SPIKE} 是未满足事件持续性要求的孤立缺失。
@@ -1090,6 +1089,10 @@ TODO & Reason \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\section*{致谢}
+\addcontentsline{toc}{section}{致谢}
+感谢金长龙老师在本项目选题、任务理解、实验推进与报告整理过程中给予的指导与帮助。老师对工业视觉检测场景、实验规范和结果表达的建议，使本项目能够从早期粗 ROI 尝试逐步收敛为更加清晰、可复核的微小 ROI 检测方案。谨此致谢。
 
 \begin{thebibliography}{99}
 \bibitem{opencv}
