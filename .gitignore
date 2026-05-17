@@ -37,7 +37,7 @@
 /大作业03.docx
 /标注示例.png
 
-# Keep source code and report files versioned while leaving large videos,
+# Keep source code versioned while leaving reports, large videos,
 # generated outputs, model caches, and extracted frames ignored.
 !/README.md
 !/advanced_defect_analysis.py
@@ -60,20 +60,12 @@ cap_annotation_tool/frames/
 cap_annotation_tool/side_roi_crops/
 cap_annotation_tool/__pycache__/
 
-!/paper/
-!/paper/cv_defect_detection_report.tex
-paper/*.pdf
-!/paper/cv_defect_detection_report_updated.pdf
-paper/*.aux
-paper/*.log
-paper/*.out
-paper/*.toc
-paper/*.listing
-paper/*.fdb_latexmk
-paper/*.fls
-paper/*.xdv
-paper/*.synctex.gz
-paper/hpc_ch2.*
+# Keep paper/report artifacts local and out of GitHub.
+paper/
+*.tex
+*.bib
+*.sty
+*.cls
 
 !/dino/
 !/dino/README.md

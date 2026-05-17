@@ -88,21 +88,6 @@ python make_side_micro_showcase_video.py ^
   --fps 8
 ```
 
-## Report
-
-The LaTeX report draft is:
-
-- `paper/cv_defect_detection_report.tex`
-
-It covers:
-
-- the complete `20241031_222226.mp4` coarse-ROI / PatchCore-style experiment;
-- the failed automatic large-ROI attempts;
-- side micro-ROI calibration;
-- final fixed upper/lower band micro-ROI classification;
-- event statistics and visualization videos;
-- limitations, missing ground truth, and future improvements.
-
 ## Notes on Accuracy
 
 The current project outputs detection statistics and internal holdout metrics, but it does not yet include full frame-level or event-level ground truth for both videos. Strict per-video accuracy and multi-video mean accuracy should therefore be computed only after adding ground-truth labels.
