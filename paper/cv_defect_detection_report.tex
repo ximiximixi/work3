@@ -226,6 +226,70 @@
     \item 低帧率检查视频和最后一分钟高级 showcase 视频；
     \item 当前仍缺少独立测试集和事件级真值所带来的解释边界。
 \end{enumerate}
+
+\section{作业要求与项目对应关系}
+\subsection{作业背景对齐}
+本作业要求面向工业自动化流水线中的多层装配件质量检验，判断“盖子/内衬是否装配到位”。本项目与该要求的对应关系是：将应出现的米白色套/盖视为目标装配证据，将缺少该实体证据的状态视为 \code{NG}，将实体套/盖清晰存在的状态视为 \code{OK}。由于真实视频中的缺陷证据并不总是占据整个目标物体，而是集中在侧边接口的局部小区域，因此本项目没有把问题简化为整帧分类，而是将其拆解为 ROI 定位、patch 状态判断、帧级聚合和事件级统计。
+
+作业强调“训练段只包含正常装配样本，测试段同时包含正常与异常样本”。本报告中保留了两条技术线：第一条是严格按照该约束构造的粗 ROI / PatchCore 风格基准，即使用视频前段正常样本建立正常记忆库，再对后段进行异常评分；第二条是面向最终侧边接口任务的工程增强方案，即通过 ROI 校准样本明确真正需要检测的微小区域，并在固定上下水平带中执行小 patch 分类与事件过滤。前者体现无监督异常检测基准，后者体现针对真实工业缺陷区域重新定义后的改进方案。
+
+\subsection{视频 A/B 与本项目文件对应关系}
+\begin{table}[H]
+\centering
+\caption{作业视频与项目文件对应关系}
+\label{tab:assignment-video-map}
+\small
+\begin{tabularx}{\textwidth}{L{0.14\textwidth}L{0.24\textwidth}L{0.24\textwidth}Y}
+\toprule
+作业视频 & 项目文件 & 主要任务定位 & 本报告中的角色 \\
+\midrule
+视频 A & \path{20241031_222226.mp4} & 前段正常样本训练，后段扫描异常装配事件。 & 粗 ROI / PatchCore 风格基准实验，展示正常记忆库、最近邻异常评分、颜色纹理增强和事件过滤。 \\
+视频 B & \path{20241101_161258.mp4} & 检测侧边接口米白色套/盖是否缺失。 & 最终 side micro ROI 检测实验，展示固定上下水平带、小 patch 分类器、规则增强、全视频事件统计和 showcase 视频。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{阶段任务与提交物对齐}
+\begin{table}[H]
+\centering
+\caption{作业阶段任务与本项目提交物对应关系}
+\label{tab:assignment-deliverables}
+\small
+\begin{tabularx}{\textwidth}{L{0.18\textwidth}L{0.25\textwidth}Y}
+\toprule
+作业阶段 & 项目实现 & 主要输出 \\
+\midrule
+预处理 & 视频解析、关键帧抽取、右半区域裁剪、ROI 校准、蓝色端盖/结构锚点定位。 & \path{prepare_cap_annotation_set.py}、\path{cap_annotation_tool/frames/}、\path{defect_outputs/visuals/01_roi_calibration.jpg}。 \\
+PatchCore / 深度方法 & 视频 A 采用 PatchCore 风格正常记忆库；视频 B 采用 side micro ROI 小 patch 分类器。 & \path{defect_detection_pipeline.py}、\path{side_micro_roi_detector.py}、\path{side_micro_outputs/summary.json}。 \\
+对比分析 & 对粗 ROI 基准、DINO/颜色基线、固定微小 ROI 分类器、规则增强版本进行定性和统计对比。 & 表~\ref{tab:version-comparison}、表~\ref{tab:failure-fix}、表~\ref{tab:accuracy-speed}。 \\
+视频演示 & README 内嵌两个动图预览，并保留 MP4 演示链接；报告正文说明 $2$ fps review 与 $8$ fps showcase。 & \path{docs/media/may16_demo_01.gif}、\path{docs/media/may16_demo_02.gif}、\path{side_micro_outputs/visuals/03_last60s_8fps_showcase.mp4}。 \\
+最终报告 & 使用 LaTeX 形成 PDF，包含方法、结果、思考、局限、附录和致谢。 & \path{paper/cv_defect_detection_report_updated.pdf}。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{评分点覆盖说明}
+\begin{table}[H]
+\centering
+\caption{评分标准与报告内容对应关系}
+\label{tab:grading-map}
+\small
+\begin{tabularx}{\textwidth}{L{0.18\textwidth}L{0.14\textwidth}Y}
+\toprule
+评分项 & 权重 & 本项目覆盖方式 \\
+\midrule
+核心方法实现 & 60\% & 实现了视频解析、ROI 定位、PatchCore 风格正常记忆库、最近邻异常评分、side micro ROI patch 分类、规则融合与事件统计。 \\
+结果可靠性 & 20\% & 输出 \path{observations.csv}、\path{events.csv}、\path{summary.json}、时间线图和 review/showcase 视频；同时明确指出当前缺少完整真值，避免过度解释。 \\
+创新与探索 & 10\% & 从大 ROI 失败转向固定微小 ROI；加入蓝色结构锚点、米白色实体证据规则、批量预测、NMS 修复和动态展示面板。 \\
+报告与演示 & 10\% & 生成完整 LaTeX PDF，README 内嵌演示动图，并在报告中说明方法、结果、限制和后续改进。 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{训练约束说明}
+作业约束要求训练时只使用视频前段正常样本。视频 A 的 PatchCore 风格基准严格遵循该思路：从 $0$--$350$s 的正常段收集 normal crops，建立正常 patch memory bank，再从后段扫描异常事件。视频 B 的最终方案在报告中作为工程增强版本单独说明：它利用 ROI 校准样本明确微小检测区域和 \code{PRESENT/MISSING/BACKGROUND} 边界，因此不应被表述为纯无监督 PatchCore；其作用是展示在真实工业缺陷检测中，当自动大 ROI 失败后，如何通过更准确的 ROI 定义、轻量分类器和规则融合提高可用性。
+
+因此，本文结果解释分为两类：无监督基准结果用于说明“仅用前段正常样本能否发现异常趋势”；最终工程方案用于说明“正确微小 ROI 定义后，能否稳定生成可复核的 OK/NG 事件与展示视频”。两类结果不混用为同一种准确率。
 \newpage
 \section{任务定义}
 \subsection{输入与输出}
@@ -374,6 +438,20 @@ PatchCore 网格 & \code{grid=14}，记忆库上限 \code{max\_memory\_patches=4
 
 \subsection{PatchCore 实现细节与改进}
 \path{defect_detection_pipeline.py} 中的 \code{TexturePatchCore} 是一个面向本视频场景重写的轻量 PatchCore 风格实现。标准 PatchCore 通常使用 ImageNet 预训练 CNN 提取多层 patch embedding，再建立正常样本 patch memory bank，并用最近邻距离度量异常程度。本项目早期没有稳定的大规模标签，也希望保持 CPU 可运行和可解释性，因此没有直接使用重型深度特征，而是将 PatchCore 思想改造为“手工 patch 特征 + 正常记忆库 + 最近邻异常分数”的工业原型。
+
+按照作业中推荐的 PatchCore 基准，其标准流程可以写为如下形式。给定训练段中的正常 ROI 集合 $\mathcal{X}_{train}$，首先用特征提取器 $f(\cdot)$ 将每个 ROI 映射为 patch 级特征集合
+\[
+    Z_i = \{z_{i,1}, z_{i,2}, \ldots, z_{i,P}\}, \quad z_{i,p}=f_p(x_i).
+\]
+所有正常 patch 特征组成记忆库
+\[
+    \mathcal{M}=\bigcup_{i,p} z_{i,p}.
+\]
+若记忆库过大，可通过 coreset 或聚类方式压缩为 $\tilde{\mathcal{M}}$，以降低推理阶段的最近邻搜索成本。测试时，对输入 ROI $x$ 提取 patch 特征 $z_p$，并计算每个 patch 到正常记忆库的最近邻距离：
+\[
+    d_p = \min_{m\in\tilde{\mathcal{M}}} \|z_p-m\|_2.
+\]
+帧级或 ROI 级异常分数可取 $\max_p d_p$，也可取最高若干比例 patch 距离的均值，以避免单个噪声 patch 造成过度敏感。本项目采用后者，将距离最高的前 $8\%$ patch 均值作为 PatchCore score，再与颜色和纹理先验组合为 hybrid score。该设计与作业目标一致：只从前段正常样本学习“正常装配外观”，后段若出现未装配或装配失误，则其局部 patch 会远离正常记忆库。
 
 具体实现过程如下：
 \begin{enumerate}[label=\arabic*.]
@@ -811,6 +889,11 @@ ROI 小样本校准集不仅提供训练样本，还纠正了项目对“sample 
 
 \subsection{工程可部署性}
 最终方案使用 OpenCV、NumPy、scikit-learn 和轻量手工特征，不依赖 GPU。候选数量少，模型为树集成分类器，具备较好的部署可行性。输出 CSV/JSON 和视频可视化也便于与复核流程结合。若要进入生产部署，还需要增加跨视频验证、在线相机标定、报警去抖、复核闭环和生产日志记录。
+
+\subsection{YOLO 目标检测方案的成本分析}
+作业指导中提到的 YOLO/DETR/DINO 类目标检测方案，在工业界具有很强的落地价值：它可以直接输出目标框和类别，把“有盖/无盖”变成一个监督式检测问题。但在本项目这种单条产线、小样本、缺陷稀缺的教学场景下，它并不是最适合快速验证的主方案。原因主要有三点。第一，YOLO 需要大量框级数据和稳定类别边界；如果只有少量正常样本，缺少 \code{NG} 样本，训练出的检测器很容易只学到当前相机角度和光照。第二，未装配样本在真实产线中通常是低频事件，收集成本高，类别不平衡会使模型倾向输出 \code{OK}。第三，YOLO 的工程链路还包括数据版本管理、增强策略、锚框或检测头调参、NMS 阈值和跨视频验证，整体成本高于无监督异常检测基准。
+
+如果只有约 $100$ 张 \code{OK} 正常样本且没有 \code{NG} 样本，更合理的快速验证路径是先采用 PatchCore、DINO 特征距离、颜色/纹理先验或自监督表征学习，从正常外观中学习参考分布，再把远离参考分布的片段作为疑似异常进行复核。若必须使用 YOLO，可考虑三类补救策略：一是利用预训练检测模型做小学习率微调，尽量减少对小数据的过拟合；二是用数据合成方式生成“缺盖/遮挡/错位”样本，作为初始负例；三是采用负样本挖掘和主动学习流程，把模型高置信错误、低置信疑似事件和 \code{FILTERED\_SPIKE} 回流为后续训练样本。总体而言，本项目选择 PatchCore 风格基准与 side micro ROI 工程增强，是为了在有限数据和有限时间内优先完成可运行、可复核的检测闭环。
 
 \section{思考与改进}
 \subsection{最难检测的情况}
